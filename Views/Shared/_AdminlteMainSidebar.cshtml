@@ -1,0 +1,40 @@
+﻿@model seanoneill.Models.ApplicationUser
+@inject seanoneill.Data.ApplicationDbContext Context
+
+
+<aside class="main-sidebar">
+   
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+      
+        <ul class="sidebar-menu" data-widget="tree">
+            <li class="header">Menu</li>
+
+            <li class="@Html.IsSelected(controller: MainMenu.Customer.ControllerName)">
+                <a href="@MainMenu.Customer.Path">
+                    <span>@MainMenu.Customer.PageName</span>
+                </a>
+            </li>
+
+
+            <li class="@Html.IsSelected(controller: MainMenu.Product.ControllerName)">
+                <a href="@MainMenu.Product.Path">
+                    <span>@MainMenu.Product.PageName</span>
+                </a>
+            </li>
+            <li class="@Html.IsSelected(controller: MainMenu.Order.ControllerName)">
+                <a href="@MainMenu.Order.Path">
+                    <span>@MainMenu.Order.PageName</span>
+                </a>
+            </li>
+
+            <li class="@Html.IsSelected(controller: MainMenu.Report.ControllerName, action: MainMenu.Report.ActionName)">
+                <a href="@MainMenu.Report.Path">
+                    <span>@MainMenu.Report.PageName</span>
+                </a>
+            </li>
+
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>

@@ -1,0 +1,111 @@
+﻿
+@{
+    ViewData["Title"] = "Order";
+}
+
+<div class="content-wrapper">
+
+    <!-- Main content -->
+    <section class="content">
+        <!-- Default box -->
+        <div class="box">
+            <div class="box-header with-border">
+                <h3 class="box-title text-primary"><i class="fa fa-building-o"></i> @ViewData["Title"]</h3>
+            </div>
+            <div class="box-body">
+                <div id="Grid"></div>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+               
+            </div>
+            <!-- /.box-footer-->
+        </div>
+        <!-- /.box -->
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+@section Styles{
+
+}
+
+@section Scripts{
+
+    <script type="text/javascript">
+        $(function () {
+
+            var dataStatus = ej.DataManager({
+                url: "/api/status",
+                adaptor: new ej.WebApiAdaptor()
+            });
+
+            var dataCustomer = ej.DataManager({
+                url: "/api/Customer",
+                adaptor: new ej.WebApiAdaptor()
+            });
+
+            var dataProduct = ej.DataManager({
+                url: "/api/Product",
+                adaptor: new ej.WebApiAdaptor()
+            });
+
+
+            var dataManager = ej.DataManager({
+                url: "/api/Order",
+                adaptor: new ej.WebApiAdaptor(),
+                offline: true
+            });
+
+            dataManager.ready.done(function (e) { 
+                $("#Grid").ejGrid({
+                    dataSource: ej.DataManager({
+                        json: e.result,
+                        adaptor: new ej.remoteSaveAdaptor(),
+                        insertUrl: "/api/Order/Insert",
+                        updateUrl: "/api/Order/Update",
+                        removeUrl: "/api/Order/Remove",
+                    }),
+                    toolbarSettings: {
+                        showToolbar: true,
+                        toolbarItems: ["add", "edit", "delete", "update", "cancel", "search"]
+                    },
+                    editSettings: {
+                        allowEditing: true,
+                        allowAdding: true,
+                        allowDeleting: true,
+                        showDeleteConfirmDialog: true,
+                        editMode: "dialog"
+                    },
+                    isResponsive: true,
+                    enableResponsiveRow: true,
+                    allowSearching: true,
+                    allowPaging: true,
+                    pageSettings: { pageSize: 10},
+                    columns: [
+                        { field: "Id", headerText: 'Id', isPrimaryKey: true, isIdentity: true, visible: true },
+                        { field: "StatusId", headerText: 'Status', foreignKeyField: "StatusId", foreignKeyValue: "Name", dataSource: dataStatus, validationRules: { required: true } },
+                        { field: "CustomerId", headerText: 'Customer Id', foreignKeyField: "Id", foreignKeyValue: "Id", dataSource: dataCustomer, validationRules: { required: true } },
+                        { field: "ProductId", headerText: 'Product Id', foreignKeyField: "Id", foreignKeyValue: "Id", dataSource: dataProduct, validationRules: { required: true } },
+                        { field: "CreationDate", headerText: 'Creation Date', editType: "datepicker", format: "{0:MM/dd/yyyy}", validationRules: { required: true } },
+                        { field: "EstimatedDate", headerText: 'EstimatedDate', editType: "datepicker", format: "{0:MM/dd/yyyy}", validationRules: { required: true } },
+                     
+                    ],
+                    actionComplete: "complete",
+                });
+            });
+
+            
+        });
+
+        function complete(args) {
+            if (args.requestType == 'beginedit') {
+                $("#" + this._id + "_dialogEdit").ejDialog({ title: "Edit Record" });
+            }
+        }
+
+
+    </script>
+}
+
